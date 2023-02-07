@@ -30,7 +30,7 @@ Root ayurveda/
         -chapters
 ```
 
-### And file formats
+### Dataset formats
 
 format of data is .json
 
