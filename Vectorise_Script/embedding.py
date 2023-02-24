@@ -12,24 +12,30 @@ openai.api_key = ""
 
 @retry(wait=wait_fixed(2))
 def get_embedding(text, model="text-embedding-ada-002"):
+
+    text = tokenizer.decode(tokenizer.encode(text)[:8000])
     print("embedding")
     return openai.Embedding.create(input=[text], model=model)["data"][0]["embedding"]
-
 
 
 
 canto_path = "srimad-bhagavatam/With Purport/"
 vectorized_canto_path = "srimad-bhagavatam/vectorized/"
 tokens = 0
-for canto_number in range(5,13): #12 cantos in Srimad Bhagavatam
+for canto_number in range(9,13): #12 cantos in Srimad Bhagavatam
+# canto_number = 8
+# done_chapters = ["1","2","3","4","5","8","9","13","14","15","18","19","22","23","25"]
     print("enterint canto",canto_number)
     for file in os.listdir(f"{canto_path}/Canto {canto_number}"):
         print(file)
+        chapter_number = file.replace(".json","").replace("Chapter","")
+        # if chapter_number in done_chapters:
+        #     continue
         with open(f'{canto_path}/Canto {canto_number}/{file}', encoding='utf-8') as fh:
             dataset = json.load(fh)
         embeddings = []
         for verse in dataset:
-            chapter_number = file.replace(".json","").replace("Chapter","")
+            
             emb = {
                 "id": verse["verse"],
                 "devnagari":verse["devanagari"],
